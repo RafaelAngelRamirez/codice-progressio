@@ -1,0 +1,50 @@
+<div class="row m-5">
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <a
+          (click)="agregarDato()"
+          class="btn btn-primary"
+          href="javascript:void(0)"
+          role="button"
+          >Agregar</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <h1>IndexedDB</h1>
+        <h2 *ngIf="cargando">...CARGANDO...</h2>
+
+
+<div class="form-group">
+  <input 
+  [formControl]="buscador"
+  
+  type="text"
+    class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+</div>
+
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of datosMostrar">
+              <td>{{ item.defaultKeyPath }}</td>
+              <td>{{ item.algo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

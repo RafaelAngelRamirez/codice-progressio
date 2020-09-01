@@ -6,5 +6,18 @@
 */
 {
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./projects/sand-box/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/sand-box/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/indexed-db/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/indexed-db/tsconfig.spec.json"
+    }
+  ]
 }
