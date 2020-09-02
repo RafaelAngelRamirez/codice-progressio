@@ -8,7 +8,6 @@ export class EstatusConexionService {
   public readonly online = new BehaviorSubject<boolean>(true);
 
   constructor() {
-    console.log('Revisando estatus de conexion');
     window.addEventListener('online', (e) => this.online.next(true));
     window.addEventListener('offline', (e) => this.online.next(false));
   }

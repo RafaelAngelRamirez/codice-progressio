@@ -13,6 +13,7 @@ export class IndexedDBService {
   constructor() {}
 
   inicializar(opciones: IDBOpciones = new IDBOpciones()): Observable<this> {
+    this.opciones = opciones
     return new Observable((subscriber) => {
       const indexDB = window.indexedDB;
 
@@ -27,7 +28,6 @@ export class IndexedDBService {
 
         request.onupgradeneeded = () => {
           this.db = request.result;
-          console.log(`Se creo la bd`, this.db);
 
           const objectStore = this.db.createObjectStore(
             opciones.objectStore,
@@ -47,7 +47,7 @@ export class IndexedDBService {
       }
     });
   }
-
+np
   save(data): Observable<this> {
     return new Observable((subscriber) => {
       const request = this.objectStore(this.opciones.objectStore, this.db).add(

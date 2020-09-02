@@ -11,9 +11,19 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": ["es2018", "dom"],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "paths": {
-      "indexed-db": ["dist/indexed-db/indexed-db", "dist/indexed-db"]
+      "indexed-db": [
+        "dist/indexed-db/indexed-db",
+        "dist/indexed-db"
+      ],
+      "estatus-conexion": [
+        "dist/estatus-conexion/estatus-conexion",
+        "dist/estatus-conexion"
+      ]
     }
   }
 }

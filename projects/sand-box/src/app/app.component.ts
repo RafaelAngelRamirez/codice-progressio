@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { IndexedDBService } from '../../../indexed-db/src/lib/indexed-db.service'
-
-
+import { IndexedDBService } from '../../../indexed-db/src/lib/indexed-db.service';
+import { EstatusConexionService } from '../../../estatus-conexion/src/lib/estatus-conexion.service';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +19,8 @@ export class AppComponent implements OnInit {
   buscador = new FormControl();
 
   ngOnInit() {
+    this.estatus.online.subscribe((_) => console.log(_));
+
     this.buscador.valueChanges.subscribe((value) => {
       this.datosMostrar = this.datos
         .filter((objeto) => {
@@ -29,7 +30,10 @@ export class AppComponent implements OnInit {
     });
   }
 
-  constructor(private idb: IndexedDBService) {
+  constructor(
+    public estatus: EstatusConexionService,
+    private idb: IndexedDBService
+  ) {
     this.idb.inicializar().subscribe(
       (servicio) => {
         this.cargarTodo();

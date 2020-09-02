@@ -18,6 +18,12 @@
     },
     {
       "path": "./projects/indexed-db/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/estatus-conexion/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/estatus-conexion/tsconfig.spec.json"
     }
   ]
 }
