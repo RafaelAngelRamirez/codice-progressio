@@ -76,6 +76,7 @@ export class IndexedDBService {
 
       request.onsuccess = () => {
         subscriber.next(this);
+        subscriber.complete()
       };
     });
   }
