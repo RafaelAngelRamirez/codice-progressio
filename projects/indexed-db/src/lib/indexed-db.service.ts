@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs'
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IndexedDBService {
   private opciones = new IDBOpciones();
@@ -13,12 +13,17 @@ export class IndexedDBService {
   constructor() {}
 
   inicializar(opciones: IDBOpciones = new IDBOpciones()): Observable<this> {
-    this.opciones = opciones
+    this.opciones = opciones;
     return new Observable((subscriber) => {
       const indexDB = window.indexedDB;
 
+      this.consoleLog('Opciones recibidas: ', this.opciones);
+
       if (indexDB) {
-        const request = indexDB.open(opciones.nombreBD, opciones.version);
+        const request = indexDB.open(
+          this.opciones.nombreBD,
+          this.opciones.version
+        );
 
         request.onsuccess = () => {
           this.db = request.result;
@@ -26,17 +31,20 @@ export class IndexedDBService {
           return subscriber.unsubscribe();
         };
 
-        request.onupgradeneeded = () => {
+        request.onupgradeneeded = (e: any) => {
           this.db = request.result;
 
           const objectStore = this.db.createObjectStore(
-            opciones.objectStore,
+            this.opciones.objectStore,
             //   { autoIncrement: true }
-            { keyPath: opciones.keyPath }
+            { keyPath: this.opciones.keyPath }
           );
 
-          subscriber.next(this);
-          return subscriber.unsubscribe();
+          let transaction = e.target.transaction;
+          transaction.oncomplete = () => {
+            subscriber.next(this);
+            return subscriber.unsubscribe();
+          };
         };
 
         request.onerror = (error) => {
@@ -47,7 +55,7 @@ export class IndexedDBService {
       }
     });
   }
-np
+  np;
   save(data): Observable<this> {
     return new Observable((subscriber) => {
       const request = this.objectStore(this.opciones.objectStore, this.db).add(
@@ -124,8 +132,15 @@ np
     });
   }
 
+  private consoleLog(...args) {
+    if (this.opciones.debug) {
+      console.log(...args);
+    }
+  }
+
   private objectStore(objectStore: string, db: IDBDatabase): IDBObjectStore {
     //Se repite el object store
+    this.consoleLog('Obteniendo objectoStore: ', objectStore);
     let transaction = db.transaction([objectStore], 'readwrite');
     return transaction.objectStore(objectStore);
   }
@@ -136,6 +151,7 @@ export class IDBOpciones {
     public nombreBD: string = 'default',
     public version: number = 1,
     public objectStore: string = 'defaultObjectStore',
-    public keyPath: string = 'defaultKeyPath'
+    public keyPath: string = 'defaultKeyPath',
+    public debug = false
   ) {}
 }

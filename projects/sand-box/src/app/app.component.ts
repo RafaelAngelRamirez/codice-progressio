@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { IndexedDBService } from '../../../indexed-db/src/lib/indexed-db.service';
+import { IndexedDBService, IDBOpciones } from '../../../indexed-db/src/lib/indexed-db.service'
 import { EstatusConexionService } from '../../../estatus-conexion/src/lib/estatus-conexion.service';
 
 @Component({
@@ -34,7 +34,12 @@ export class AppComponent implements OnInit {
     public estatus: EstatusConexionService,
     private idb: IndexedDBService
   ) {
-    this.idb.inicializar().subscribe(
+
+    let opciones = new IDBOpciones()
+    opciones.objectStore = "esOtro"
+    opciones.debug = true
+
+    this.idb.inicializar(opciones).subscribe(
       (servicio) => {
         this.cargarTodo();
       },
