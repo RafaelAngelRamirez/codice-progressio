@@ -28,7 +28,7 @@ export class IndexedDBService {
         request.onsuccess = () => {
           this.db = request.result;
           subscriber.next(this);
-          return subscriber.unsubscribe();
+          subscriber.complete()
         };
 
         request.onupgradeneeded = (e: any) => {
@@ -43,7 +43,7 @@ export class IndexedDBService {
           let transaction = e.target.transaction;
           transaction.oncomplete = () => {
             subscriber.next(this);
-            return subscriber.unsubscribe();
+            subscriber.complete()
           };
         };
 
@@ -55,7 +55,6 @@ export class IndexedDBService {
       }
     });
   }
-  np;
   save(data): Observable<this> {
     return new Observable((subscriber) => {
       const request = this.objectStore(this.opciones.objectStore, this.db).add(
@@ -64,7 +63,7 @@ export class IndexedDBService {
 
       request.onsuccess = () => {
         subscriber.next(this);
-        return subscriber.unsubscribe();
+        subscriber.complete()
       };
     });
   }
@@ -103,7 +102,7 @@ export class IndexedDBService {
       request.onsuccess = () => {
         subscriber.next(this);
 
-        return subscriber.unsubscribe();
+        subscriber.complete()
       };
     });
   }
@@ -124,7 +123,7 @@ export class IndexedDBService {
           cursor.continue();
         } else {
           subscriber.next(datos);
-          return subscriber.unsubscribe();
+          subscriber.complete()
         }
       };
 

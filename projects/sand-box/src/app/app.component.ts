@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { IndexedDBService, IDBOpciones } from '../../../indexed-db/src/lib/indexed-db.service'
+import {
+  IndexedDBService,
+  IDBOpciones,
+} from '../../../indexed-db/src/lib/indexed-db.service';
 import { EstatusConexionService } from '../../../estatus-conexion/src/lib/estatus-conexion.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -34,14 +38,22 @@ export class AppComponent implements OnInit {
     public estatus: EstatusConexionService,
     private idb: IndexedDBService
   ) {
-
-    let opciones = new IDBOpciones()
-    opciones.objectStore = "esOtro"
-    opciones.debug = true
+    let opciones = new IDBOpciones();
+    opciones.objectStore = 'esOtro';
+    opciones.debug = true;
 
     this.idb.inicializar(opciones).subscribe(
       (servicio) => {
-        this.cargarTodo();
+        forkJoin(
+          'asdlfjasdljf'.split('').map((x) =>
+            this.idb.save({
+              defaultKeyPath: (Math.random() + '').replace('.', ''),
+              algo: 'algo',
+            })
+          )
+        ).subscribe((Parametros) => {
+          this.cargarTodo();
+        });
       },
       (err) => console.log(err),
       () => console.log('complete')
