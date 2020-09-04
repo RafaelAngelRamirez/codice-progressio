@@ -94,15 +94,14 @@ export class IndexedDBService {
     });
   }
 
-  findById(key): Observable<this> {
+  findById(key): Observable<any> {
     return new Observable((subscriber) => {
       const request = this.objectStore(this.opciones.objectStore, this.db).get(
         key
       );
 
       request.onsuccess = () => {
-        subscriber.next(this);
-
+        subscriber.next(request.result);
         subscriber.complete()
       };
     });
