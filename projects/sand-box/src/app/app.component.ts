@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
       .subscribe(() => {
         this.cargarTodo();
       });
-  }
+  } 
 
   agregarDato() {
     this.idb
