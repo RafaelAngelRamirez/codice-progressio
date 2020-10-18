@@ -6,6 +6,7 @@ import {
 } from '../../../indexed-db/src/lib/indexed-db.service';
 import { EstatusConexionService } from '../../../estatus-conexion/src/lib/estatus-conexion.service';
 import { forkJoin } from 'rxjs';
+import { IDBOpcionesObjectStore } from '../../../indexed-db/src/lib/indexed-db.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent implements OnInit {
   datos: any[];
 
   desde = 0;
-  skip = 5;
+  skip = 0;
 
   datosMostrar: any[] = [];
   buscador = new FormControl();
@@ -34,38 +35,42 @@ export class AppComponent implements OnInit {
     });
   }
 
+  storeObjects = {
+    PARAMETROS: new IDBOpcionesObjectStore('PARAMETROS', 'NOMBRE_PARAMETRO'),
+    CONTRATOS: new IDBOpcionesObjectStore('CONTRATOS', '_id'),
+  };
+
   constructor(
     public estatus: EstatusConexionService,
     private idb: IndexedDBService
   ) {
-    let opciones = new IDBOpciones();
-    opciones.objectStore = 'esOtro';
-    opciones.debug = true;
+    this.ejemploIndexedDB();
+  }
 
-    this.idb.inicializar(opciones).subscribe(
-      (servicio) => {
-        forkJoin(
-          'asdlfjasdljf'.split('').map((x) =>
-            this.idb.save({
-              defaultKeyPath: (Math.random() + '').replace('.', ''),
-              algo: 'algo',
-            })
-          )
-        ).subscribe((Parametros) => {
-          this.cargarTodo();
-        });
-      },
-      (err) => console.log(err),
-      () => console.log('complete')
-    );
+  ejemploIndexedDB() {
+    this.idb.debug = true;
+    let opciones = new IDBOpciones();
+    opciones.nombreBD = 'SIMAPA';
+
+    this.idb
+      .inicializar(opciones, Object.values(this.storeObjects))
+      .subscribe(() => {
+        this.cargarTodo();
+      });
   }
 
   agregarDato() {
     this.idb
-      .save({
-        defaultKeyPath: (Math.random() + '').replace('.', ''),
-        algo: 'algo',
-      })
+      .save(
+        {
+          [this.storeObjects.PARAMETROS.keyPath]: (Math.random() + '').replace(
+            '.',
+            ''
+          ),
+          NOMBRE: 'algo',
+        },
+        this.storeObjects.PARAMETROS
+      )
       .subscribe((servicio) => {
         // this.cargarTodo();
       });
@@ -76,14 +81,14 @@ export class AppComponent implements OnInit {
   cargarTodo() {
     this.cargando = true;
     console.log('cargando todo');
-    this.idb.findAll().subscribe(
+    this.idb.findAll(this.storeObjects.PARAMETROS).subscribe(
       (datos) => {
         this.datos = datos;
-        this.datosMostrar = this.datos.slice(this.desde, this.skip);
+        this.datosMostrar = this.datos;
         this.cargando = false;
       },
       (err) => {
-        console.log(err);
+        console.log('error cargando todo', err);
         this.cargando = false;
       }
     );
