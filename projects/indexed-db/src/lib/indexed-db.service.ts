@@ -174,6 +174,37 @@ export class IndexedDBService {
     });
   }
 
+  /**
+   *Elimina todos los datos del objectStore
+   *
+   * @param {IDBOpcionesObjectStore} iDBOpcionesObjectStore El objectStore a limpiar.
+   * @returns {Observable<this>} Retorna este servicio
+   * @memberof IndexedDBService
+   */
+  deleteAll(iDBOpcionesObjectStore: IDBOpcionesObjectStore): Observable<this> {
+    return new Observable((subscriber) => {
+      this.consoleLog(
+        '[ DELETE ] Eliminado todos los datos: ',
+        iDBOpcionesObjectStore
+      );
+      const request = this.objectStore(
+        iDBOpcionesObjectStore.objectStore,
+        this.db
+      ).clear();
+
+      request.onsuccess = () => {
+        this.consoleLog('[ DELETE ] Se elimino todo correctamente...');
+        subscriber.next(this);
+        subscriber.complete();
+      };
+
+      request.onerror = (err) => {
+        console.error('[ DELETE ] Error en deleteAll: ', err);
+        subscriber.error(err);
+      };
+    });
+  }
+
   findById(
     key,
     iDBOpcionesObjectStore: IDBOpcionesObjectStore
